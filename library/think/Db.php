@@ -23,7 +23,7 @@ use think\db\Query;
  * @method Query union(mixed $union, boolean $all = false) static UNION查询
  * @method Query limit(mixed $offset, integer $length = null) static 查询LIMIT
  * @method Query order(mixed $field, string $order = null) static 查询ORDER
- * @method Query cache(mixed $key = null , integer $expire = null) static 设置查询缓存
+ * @method Query cache(mixed $key = null, integer $expire = null) static 设置查询缓存
  * @method mixed value(string $field) static 获取某个字段的值
  * @method array column(string $field, string $key = '') static 获取某个列的值
  * @method Query view(mixed $join, mixed $field = null, mixed $on = null, string $type = 'INNER') static 视图查询
@@ -88,6 +88,9 @@ class Db
 
     public static function setConfig($config = [])
     {
+        if (empty($config)) {
+            $config = \Yaf_Registry::get('config')->get('db')->toArray();
+        }
         self::$config = array_merge(self::$config, $config);
     }
 
@@ -108,9 +111,9 @@ class Db
     /**
      * 字符串命名风格转换
      * type 0 将Java风格转换为C的风格 1 将C风格转换为Java的风格
-     * @param string  $name 字符串
+     * @param string $name 字符串
      * @param integer $type 转换类型
-     * @param bool    $ucfirst 首字母是否大写（驼峰规则）
+     * @param bool $ucfirst 首字母是否大写（驼峰规则）
      * @return string
      */
     public static function parseName($name, $type = 0, $ucfirst = true)

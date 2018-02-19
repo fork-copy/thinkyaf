@@ -854,6 +854,7 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
             $result = $data->with($with)->cache($cache);
             $data   = null;
         }
+
         return $result;
     }
 
@@ -866,7 +867,9 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
     public static function destroy($data)
     {
         $model = new static();
+
         $query = $model->db();
+
         if (empty($data) && 0 !== $data) {
             return 0;
         } elseif (is_array($data) && key($data) !== 0) {

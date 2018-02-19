@@ -7,6 +7,7 @@ class ErrorController extends Yaf_Controller_Abstract {
      * 此时可通过$request->getException()获取到发生的异常
      */
     public function errorAction($exception) {
+        dump($exception->getCode());
         switch ($exception->getCode()) {
             case YAF_ERR_AUTOLOAD_FAILED:
             case YAF_ERR_NOTFOUND_MODULE:
