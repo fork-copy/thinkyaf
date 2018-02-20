@@ -19,7 +19,6 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
         Yaf_Registry::set("config", $config);
 
     }
-
     /**
      * 加载数据库
      */

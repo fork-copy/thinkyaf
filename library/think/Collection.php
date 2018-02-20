@@ -43,7 +43,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     public function toArray()
     {
         return array_map(function ($value) {
-            return ($value instanceof Model || $value instanceof self) ? $value->toArray() : $value;
+            return ($value instanceof \Model || $value instanceof self) ? $value->toArray() : $value;
         }, $this->items);
     }
 

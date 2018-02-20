@@ -180,7 +180,7 @@ class Query
      * @param Model $model 模型对象实例
      * @return $this
      */
-    public function model(Model $model)
+    public function model(\Model $model)
     {
         $this->model = $model;
         return $this;

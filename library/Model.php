@@ -5,6 +5,8 @@
  * @author  storm <admin@yumufeng.com>
  */
 
+use \think\db\Query;
+
 /**
  * Class Model
  * @package think
@@ -121,11 +123,15 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         // 记录原始数据
         $this->origin = $this->data;
 
-        $config = Db::getConfig();
-
+        $config = \think\Db::getConfig();
         if (empty($this->name)) {
             // 当前模型名
-            $name = str_replace('\\', '/', static::class);
+            if (extension_loaded('yaf')) {
+                $name_model = substr(static::class, 0, -5);
+            } else {
+                $name_model = static::class;
+            }
+            $name = str_replace('\\', '/', $name_model);
             $this->name = basename($name);
             if (!empty($config['class_suffix'])) {
                 $suffix = basename(dirname($name));
@@ -146,10 +152,9 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         if (is_null($this->resultSetType)) {
             $this->resultSetType = $config['resultset_type'];
         }
-
         if (is_null($this->query)) {
             // 设置查询对象
-            $this->query = $config['query'];
+            $this->query = isset($config['query']) ? $config['query'] : '\think\db\Query';
         }
 
         if (!empty($this->connection) && is_array($this->connection)) {
