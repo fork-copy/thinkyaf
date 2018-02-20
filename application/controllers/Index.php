@@ -9,11 +9,4 @@ class IndexController extends Controller
     {
 
     }
-
-    public function listsAction()
-    {
-
-        echo '111111111';
-    }
-
 }
