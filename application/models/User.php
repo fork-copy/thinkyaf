@@ -7,9 +7,4 @@
 class UserModel extends Model
 {
 
-    public function listsShow()
-    {
-        $result = $this->limit(10)->select();
-        dump($result);
-    }
 }

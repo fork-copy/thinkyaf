@@ -6,5 +6,7 @@ if (!defined('__ROOT__')) {
 }
 // 定义应用目录
 define("APP_PATH", dirname(dirname(__FILE__)));
+//加载配置
 $app = new Yaf_Application(APP_PATH . "/conf/app.ini");
+//启动应用
 $app->bootstrap()->run();
