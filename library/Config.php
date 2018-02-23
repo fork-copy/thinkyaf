@@ -20,8 +20,8 @@ class Config
     public static function get($key = null, $default = null)
     {
 
-        if (!$config = &Config::$config) {
-            $config = Yaf_Application::app()->getConfig()->toArray();
+        if (!($config = &Config::$config)) {
+            $config = Yaf_Registry::get('config')->toArray();
         }
         //如果为空，返回所有的配置
         if ($key == null) {
@@ -30,12 +30,17 @@ class Config
         // 非二级配置时直接返回
         if (!strpos($key, '.')) {
             $name = strtolower($key);
-            $value = $config[$name];
+            $value = isset($config[$name]) ? $config[$name]: null ;
             return null === $value ? $default : $value;
         }
         // 二维数组设置和获取支持
         $name = explode('.', $key, 2);
         $name[0] = strtolower($name[0]);
-        return isset(self::$config[$name[0]][$name[1]]) ? self::$config[$name[0]][$name[1]] : $default;
+        return isset($config[$name[0]][$name[1]]) ? $config[$name[0]][$name[1]] : $default;
+    }
+
+    public static function set($key, $data)
+    {
+        //待完善
     }
 }

@@ -4,9 +4,9 @@
  * Date: 2018\2\20 0020 15:51
  */
 
-class IndexController extends Controller{
+class IndexController extends Controller {
 
     public function indexAction(){
-        echo 'Admin';
+
     }
 }

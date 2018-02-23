@@ -15,10 +15,11 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
 
     public function _initConfig(Yaf_Dispatcher $dispatcher)
     {
-        $config = Yaf_Application::app()->getConfig();
+        $this->config = $config = Yaf_Application::app()->getConfig();
         Yaf_Registry::set("config", $config);
 
     }
+
     /**
      * 加载数据库
      */
@@ -26,5 +27,15 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
     public function _initDatabase(Yaf_Dispatcher $dispatcher)
     {
         \think\Db::setConfig();
+    }
+
+    /**
+     * 设置缓存配置
+     * @param Yaf_Dispatcher $dispatcher
+     */
+    public function _initCache(Yaf_Dispatcher $dispatcher)
+    {
+        $config = $this->config->get('cache')->toArray();
+        \think\Cache::init($config);
     }
 }

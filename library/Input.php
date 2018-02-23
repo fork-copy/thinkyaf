@@ -18,10 +18,10 @@ class Input
     /**
      * 输入过滤
      *
-     * @param string $param   [输入参数]
-     * @param mixed  &$export [description]
-     * @param mixed  $filter  [过滤条件]
-     * @param type   $default [description]
+     * @param string $param [输入参数]
+     * @param mixed &$export [description]
+     * @param mixed $filter [过滤条件]
+     * @param type $default [description]
      *
      * @example if(I('post.phone',$phone,'phone')){}//phone()方法验证
      * @example if(I('get.id',$uid,'int',1)){}//数字，int函数验证,默认1
@@ -33,12 +33,12 @@ class Input
         if (strpos($param, '.')) {
             list($method, $name) = explode('.', $param, 2);
             /*PUT请求已在REST中注入到$GLOBAL中*/
-            $method = '_'.strtoupper($method);
-            $input  = &$GLOBALS[$method];
+            $method = '_' . strtoupper($method);
+            $input = &$GLOBALS[$method];
         } else {
             // 默认为自动判断
             $input = &$_REQUEST;
-            $name  = $param;
+            $name = $param;
         }
         $r = self::filter($input, $name, $export, $filter) or ($export = $default);
         return $r;
@@ -66,10 +66,10 @@ class Input
     /**
      * 过滤器
      *
-     * @param string &$input  [输入参数]
-     * @param mixed  &$index  [description]
-     * @param mixed  &$export [description]
-     * @param mixed  $filter  [过滤条件]
+     * @param string &$input [输入参数]
+     * @param mixed &$index [description]
+     * @param mixed &$export [description]
+     * @param mixed $filter [过滤条件]
      *
      * @return bool 验证是否有效
      */
@@ -82,15 +82,12 @@ class Input
                 case 'NULL':
                 case null:    //无需过滤
                     return true;
-
                 case 'int'://整型常量
                 case 'integer':
-
-                /*系统过滤函数*/
+                    /*系统过滤函数*/
                     return $export = filter_var($export, $filter);
-
                 case 'object':
-                /*匿名回调函数*/
+                    /*匿名回调函数*/
                     $r = $filter($export);
                     return $r ? ($export = $r) : false;
 
@@ -105,24 +102,15 @@ class Input
                         $r = $filter($export);
                         //返回值不是true型的进行赋值（过滤），否则进行验证
                         return $r ? (is_bool($r) or $export = $r) : $export = $r;
-                    } elseif (method_exists('Parse\Filter', $filter)) {
-                        /*过滤器过滤*/
-                        return (bool) $export = call_user_func_array(array('Parse\Filter', $filter), array($export));
-                    } elseif (method_exists('Validate', $filter)) {
-                        /*Validate方法验证*/
-                        return call_user_func_array(array('Validate', $filter), array($export));
                     } elseif ($filterid = filter_id($filter)) {
                         /*系统过滤函数*/
                         return $export = filter_var($export, $filterid);
-                    } elseif ($regex = (string) Config::get('regex.'.$filter)) {
-                        /*尝试配置正则*/
-                        return preg_match($regex, $export);
                     }
                 //继续往下走
                 // no break
                 default:
                     if (Config::get('debug')) {
-                        throw new Exception('未知过滤方法'.$filter);
+                        throw new Exception('未知过滤方法' . $filter);
                     }
                     return false;
             }
