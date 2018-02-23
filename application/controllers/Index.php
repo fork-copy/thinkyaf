@@ -8,6 +8,18 @@ class IndexController extends Controller
 
     public function IndexAction()
     {
+        $yafHttp = new Yaf_Request_Simple();
+        dump($yafHttp->getRequest());
+
+        dump($yafHttp->getActionName());
+
+        dump($yafHttp->getModuleName());
+
+        dump($yafHttp->getControllerName());
+
+        dump($yafHttp->getMethod());
+
+        dump($yafHttp->getParams());
 
     }
 }

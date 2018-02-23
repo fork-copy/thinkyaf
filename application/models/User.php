@@ -1,7 +1,8 @@
 <?php
 /**
  * 用户模型
- * Date: 2018\2\20 0020 13:00
+ *
+ * 写法请参考 ThinkPHP 5.1的数据模型
  */
 
 class UserModel extends Model
