@@ -33,8 +33,8 @@ class Cache
     /**
      * 连接缓存
      * @access public
-     * @param  array         $options  配置数组
-     * @param  bool|string   $name 缓存连接标识 true 强制重新连接
+     * @param  array $options 配置数组
+     * @param  bool|string $name 缓存连接标识 true 强制重新连接
      * @return Driver
      */
     public static function connect(array $options = [], $name = false)
@@ -61,12 +61,17 @@ class Cache
     /**
      * 自动初始化缓存
      * @access public
-     * @param  array         $options  配置数组
+     * @param  array $options 配置数组
      * @return Driver
      */
-    public static function init(array $options = [])
+    public static function init($options = [])
     {
+
         if (is_null(self::$handler)) {
+            if (empty($options)){
+                $cache = new \Yaf_Config_Ini(APP_PATH . '/conf/cache.ini');
+                $options = $cache->get('cache')->toArray();
+            }
             // 自动初始化缓存
             self::$handler = self::connect($options);
         }

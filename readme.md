@@ -105,7 +105,6 @@ $user->getUserInfo($uid);
 
 ## 用法
 ~~~php
-use think\Validate;
 
 $validate = Validate::make([
     'name'  => 'require|max:25',

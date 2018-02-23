@@ -1,6 +1,7 @@
 <?php
 
 namespace think;
+
 use think\db\Query;
 
 /**
@@ -79,7 +80,8 @@ class Db
     public static function setConfig($config = [])
     {
         if (empty($config)) {
-            $config = \Yaf_Registry::get('config')->get('db')->toArray();
+            $secret = new \Yaf_Config_Ini(APP_PATH . '/conf/db.ini');
+            $config = $secret->get('db')->toArray();
         }
         self::$config = array_merge(self::$config, $config);
     }

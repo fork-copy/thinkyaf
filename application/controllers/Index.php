@@ -15,11 +15,12 @@ class IndexController extends Rest
      */
     public function GET_testAction()
     {
-        if (Input::get('data', $uid, 'int', 1)) {//get参数中含data
+        if (Input::get('data', $uid, 'int', 1)) {
+            \think\Cache::set('test_action',1);
             //数据库操作
             $userinfo = \think\Db::name('user')->where('uid', $uid)->field('uid,username')->find();
             $this->success($userinfo);
-        } else {//未输入data参数
+        } else {
             //fail快速返回出错信息
             $this->fail('please send request data with field name "data"');
         }

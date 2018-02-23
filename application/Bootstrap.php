@@ -35,7 +35,6 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
      */
     public function _initCache(Yaf_Dispatcher $dispatcher)
     {
-        $config = $this->config->get('cache')->toArray();
-        \think\Cache::init($config);
+        \think\Cache::init();
     }
 }
