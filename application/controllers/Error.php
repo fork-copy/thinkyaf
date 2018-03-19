@@ -2,7 +2,7 @@
 /**
  * 当有未捕获的异常, 则控制流会流到这里
  */
-class ErrorController extends Yaf_Controller_Abstract {
+class ErrorController extends Controller {
     /**
      * 此时可通过$request->getException()获取到发生的异常
      */
@@ -18,10 +18,8 @@ class ErrorController extends Yaf_Controller_Abstract {
                 header("HTTP/1.0 500 Internal Server Error");
                 break;
         }
-
         $this->getView()->e = $exception;
         $this->getView()->e_class = get_class($exception);
-        $this->getView()->e_string_trace = $exception->getTraceAsString();
         $params = $this->getRequest()->getParams();
         unset($params['exception']);
         $this->getView()->params = array_merge(
@@ -30,6 +28,5 @@ class ErrorController extends Yaf_Controller_Abstract {
             $this->getRequest()->getPost(),
             $this->getRequest()->getQuery()
         );
-
     }
 }

@@ -8,6 +8,20 @@ use \think\Cache;
 
 class Rsa
 {
+
+    private static $lifetime = '2592000';
+
+    /**
+     * 设置当前密钥失效时间，秒
+     * @param $lifetime
+     * @return string
+     */
+    public static function setLifeTime($lifetime)
+    {
+        self::$lifetime = $lifetime;
+        return self::class;
+    }
+
     /**
      * 获取公钥文件
      *
@@ -65,7 +79,7 @@ class Rsa
         openssl_pkey_export($res, $pri);
         $d = openssl_pkey_get_details($res);
         $pair = array($pri, $d['key']);
-        Cache::set("rsa.${id}.pair", $pair, Config::get('res.lifetime'));
+        Cache::set("rsa.${id}.pair", $pair, self::$lifetime);
         return $pair;
     }
 

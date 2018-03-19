@@ -85,7 +85,8 @@ class Input
                 case 'int'://整型常量
                 case 'integer':
                     /*系统过滤函数*/
-                    return $export = filter_var($export, $filter);
+                    $export = filter_var($export, $filter);
+                    return $export;
                 case 'object':
                     /*匿名回调函数*/
                     $r = $filter($export);

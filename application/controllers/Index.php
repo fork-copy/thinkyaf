@@ -8,22 +8,15 @@ class IndexController extends Rest
 {
 
     /**
-     * GET /Index/test?data=''
+     * GET /Index/index?data=''
      * GET请求测试
      *
      * success() 和 fail() 快速返回示例
      */
-    public function GET_testAction()
+    public function GET_indexAction()
     {
-        if (Input::get('data', $uid, 'int', 1)) {
-            \think\Cache::set('test_action',1);
-            //数据库操作
-            $userinfo = \think\Db::name('user')->where('uid', $uid)->field('uid,username')->find();
-            $this->success($userinfo);
-        } else {
-            //fail快速返回出错信息
-            $this->fail('please send request data with field name "data"');
-        }
+        $userinfo = \think\Db::name('video')->select();
+        $this->success($userinfo);
     }
 
     /**

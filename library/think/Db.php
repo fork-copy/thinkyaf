@@ -80,8 +80,7 @@ class Db
     public static function setConfig($config = [])
     {
         if (empty($config)) {
-            $secret = new \Yaf_Config_Ini(APP_PATH . '/conf/db.ini');
-            $config = $secret->get('db')->toArray();
+            $config = \Config::get('db.db');
         }
         self::$config = array_merge(self::$config, $config);
     }

@@ -19,28 +19,49 @@ class Config
      */
     public static function get($key = null, $default = null)
     {
-
-        if (!($config = &Config::$config)) {
-            $config = Yaf_Registry::get('config')->toArray();
+        if (!($config = self::$config)) {
+            $config = Yaf_Application::app()->getConfig()->toArray();
         }
         //如果为空，返回所有的配置
         if ($key == null) {
             return $config;
         }
+        if (isset($config[$key])) {
+            return $config[$key];
+        }
         // 非二级配置时直接返回
         if (!strpos($key, '.')) {
             $name = strtolower($key);
-            $value = isset($config[$name]) ? $config[$name]: null ;
+            if ($config_options = self::parse_config($name)) {
+                return $config_options;
+            }
+            $value = isset($config[$name]) ? $config[$name] : null;
             return null === $value ? $default : $value;
         }
         // 二维数组设置和获取支持
         $name = explode('.', $key, 2);
         $name[0] = strtolower($name[0]);
+        if ($config_options = self::parse_config($name[0])) {
+            if (isset($config_options[$name[1]])) {
+                return $config_options[$name[1]];
+            }
+            $config = array_merge($config, $config_options);
+        }
         return isset($config[$name[0]][$name[1]]) ? $config[$name[0]][$name[1]] : $default;
     }
 
-    public static function set($key, $data)
+    /**
+     * 解析读取 config目录下配置文件
+     * @param $name
+     * @return bool
+     */
+    private static function parse_config($name)
     {
-        //待完善
+        $config_file = APP_PATH . '/conf/' . $name . '.ini';
+        if (file_exists($config_file)) {
+            $yaf_config_ini = new \Yaf_Config_Ini($config_file);
+            return $yaf_config_ini->get(APP_ENV)->toArray();
+        }
+        return false;
     }
 }

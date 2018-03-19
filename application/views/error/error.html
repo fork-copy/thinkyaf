@@ -6,6 +6,7 @@
         body {
             background-color: #fff;
             color: #333;
+            margin: 25px;
         }
 
         body, p, ol, ul, td {
@@ -24,6 +25,7 @@
             background-color: #eeeeff;
             padding: 10px;
             font-size: 11px;
+            width: auto;
         }
 
         span.file {
@@ -59,8 +61,10 @@
 </head>
 <body>
 <h1><?php echo $e_class ?></h1>
-<pre class="strong"><span class="exception"><?php echo  $e_class; ?></span>: <span class="message"><?php echo $e->
-    getMessage()?></span> in file <span class="file"><?php echo $e->getFile()?></span> at line <span
+<pre class="strong"><span class="exception"><?php echo  $e_class; ?></span>:
+    <span class="message"><?php echo $e->
+    getMessage()?></span>
+    in file <span class="file"><?php echo $e->getFile()?></span> at line <span
         class="line"><?php echo $e->getLine()?></span></pre>
 
 <div id="traces">

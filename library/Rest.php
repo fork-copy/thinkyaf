@@ -5,7 +5,7 @@
  *
  */
 
-class Rest extends Controller
+class Rest extends Yaf_Controller_Abstract
 {
 
     /**
@@ -50,21 +50,20 @@ class Rest extends Controller
      */
     protected function init()
     {
-        parent::init();
         Yaf_Dispatcher::getInstance()->disableView(); //立即输出响应，并关闭视图模板
         $request = $this->_request;
-
         /*请求来源，跨站cors响应*/
-        if ($cors = Config::get('cors')) {
+        $rest_info = Config::get('rest');
+        $cors = isset($rest_info['cors']) ? $rest_info['cors'] : '';
+        if ($cors) {
             $this->corsHeader($cors);
         }
-
         /*请求操作判断*/
         $method = $request->getMethod();
         $type = $request->getServer('CONTENT_TYPE');
         if ($method === 'OPTIONS') {
             /*cors 跨域header应答,只需响应头即可*/
-            exit;
+            exit();
         } elseif (strpos($type, 'application/json') === 0) {
             /*json 数据格式*/
             if ($inputs = file_get_contents('php://input')) {
@@ -82,7 +81,7 @@ class Rest extends Controller
 
         /*Action路由*/
         $action = $request->getActionName();
-        $this->_config = Config::get('rest');
+        $this->_config = $rest_info['rest'];
         if (is_numeric($action)) {
             /*数字id绑定参数*/
             $request->setParam($this->_config['param'], intval($action));
@@ -104,13 +103,19 @@ class Rest extends Controller
             if (method_exists($this, $this->_config['none'] . 'Action')) {
                 $request->setActionName($this->_config['none']);
             } else {
-                $this->response(10001, array(
+                $info = array(
                     'error' => '未定义操作',
-                    'method' => $method,
-                    'action' => $action,
-                    'controller' => $request->getControllerName(),
-                    'module' => $request->getmoduleName(),
-                ), 404);
+                );
+                if (APP_ENV == 'develop') {
+                    $dev_info = array(
+                        'method' => $method,
+                        'action' => $action,
+                        'controller' => $request->getControllerName(),
+                        'module' => $request->getmoduleName()
+                    );
+                    $info = array_merge($info, $dev_info);
+                }
+                $this->response(10001, $info, 404);
                 exit;
             }
         } elseif ($action !== $request->getActionName()) {
@@ -187,7 +192,6 @@ class Rest extends Controller
         //请求来源站点
         $from = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] :
             (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
-
         if ($from) {
             $domains = $cors['Access-Control-Allow-Origin'];
             if ($domains !== '*') {//非通配

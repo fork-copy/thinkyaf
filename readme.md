@@ -198,7 +198,7 @@ REST控制器核心基类
 
 * 自动把GET,POST,PUT,DELETE 映射到 对应的Action 如getdetail 映射到GET_detailAction()
 * 自动绑定参数id
-* 自动输出xml或者json格式数据
+* 自动输出json格式数据
 
 代码演示:
 ```php
@@ -245,11 +245,55 @@ REST控制器核心基类
 
 
 # Session
-Session操作管理
-支持数组
+基础用法
+
+赋值
 ```php
-Session::set($name, $data) #设置
-Session::get($name)        #读取
-Session::del($name)        #删除
-Session::flush()           #清空
+// 赋值（当前作用域）
+Session::set('name','thinkphp');
+// 赋值think作用域
+Session::set('name','thinkphp','think');
+```
+
+判断是否存在
+```php
+// 判断（当前作用域）是否赋值
+Session::has('name');
+// 判断think作用域下面是否赋值
+Session::has('name','think');
+```
+
+取值
+```php
+// 取值（当前作用域）
+Session::get('name');
+// 取值think作用域
+Session::get('name','think');
+如果name的值不存在，返回null。
+```
+删除
+```php
+// 删除（当前作用域）
+Session::delete('name');
+// 删除think作用域下面的值
+Session::delete('name','think');
+```
+
+指定作用域
+```php
+// 指定当前作用域
+Session::prefix('think');
+```
+取值并删除
+```php
+// 取值并删除
+Session::pull('name');
+如果name的值不存在，返回Null。
+```
+清空
+```php
+// 清除session（当前作用域）
+Session::clear();
+// 清除think作用域
+Session::clear('think');
 ```

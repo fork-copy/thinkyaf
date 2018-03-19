@@ -2,7 +2,6 @@
 
 class Bootstrap extends Yaf_Bootstrap_Abstract
 {
-    protected $config = [];
 
     /**
      * 加载公共函数库
@@ -10,14 +9,8 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
      */
     public function _initFunction(Yaf_Dispatcher $dispatcher)
     {
-        Yaf_Loader::import('function/Common.php');
-    }
-
-    public function _initConfig(Yaf_Dispatcher $dispatcher)
-    {
-        $this->config = $config = Yaf_Application::app()->getConfig();
-        Yaf_Registry::set("config", $config);
-
+        Yaf_Loader::import('function/helper.php');
+        import('common');
     }
 
     /**

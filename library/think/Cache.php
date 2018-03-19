@@ -69,8 +69,7 @@ class Cache
 
         if (is_null(self::$handler)) {
             if (empty($options)){
-                $cache = new \Yaf_Config_Ini(APP_PATH . '/conf/cache.ini');
-                $options = $cache->get('cache')->toArray();
+                $options = \Config::get('cache.cache');
             }
             // 自动初始化缓存
             self::$handler = self::connect($options);
