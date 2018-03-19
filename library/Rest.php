@@ -37,8 +37,10 @@ class Rest extends Yaf_Controller_Abstract
     public function __destruct()
     {
         if ($this->response !== false) {
-            header('Content-Type: application/json; charset=utf-8', true, $this->code);
-            echo json_encode($this->response, $this->_config['json']);
+            $response = $this->_response;
+            $response->setHeader('Content-Type', 'application/json;charset=utf-8',true, $this->code);
+            $response->setBody( json_encode($this->response, $this->_config['json']));
+            $response->response();
         }
     }
 

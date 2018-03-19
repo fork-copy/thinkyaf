@@ -15,8 +15,8 @@ class IndexController extends Rest
      */
     public function GET_indexAction()
     {
-        $userinfo = \think\Db::name('video')->select();
-        $this->success($userinfo);
+
+
     }
 
     /**

@@ -114,3 +114,33 @@ if (!function_exists('cache')) {
         }
     }
 }
+
+if (!function_exists('cookie')) {
+    /**
+     * Cookie管理
+     * @param string|array  $name cookie名称，如果为数组表示进行cookie设置
+     * @param mixed         $value cookie值
+     * @param mixed         $option 参数
+     * @return mixed
+     */
+    function cookie($name, $value = '', $option = null)
+    {
+        if (is_array($name)) {
+            // 初始化
+            Cookie::init($name);
+        } elseif (is_null($name)) {
+            // 清除
+            Cookie::clear($value);
+        } elseif ('' === $value) {
+            // 获取
+            return 0 === strpos($name, '?') ? Cookie::has(substr($name, 1), $option) : Cookie::get($name, $option);
+        } elseif (is_null($value)) {
+            // 删除
+            return Cookie::delete($name);
+        } else {
+            // 设置
+            return Cookie::set($name, $value, $option);
+        }
+    }
+}
+
