@@ -19,7 +19,6 @@ class Rsa
     public static function setLifeTime($lifetime)
     {
         self::$lifetime = $lifetime;
-        return self::class;
     }
 
     /**
