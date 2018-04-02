@@ -21,6 +21,7 @@ class QiniuController extends BaseController
     {
         $filekey = time() . Random::char(4);
         $expire = 1800; //过期时间 秒
+        //获得bucket为 video的 里面文件为filekey的 token
         $token = \extend\Qiniu::getInstance('video')->getToken($filekey, $expire);
         $this->success('获取成功', $token);
     }
