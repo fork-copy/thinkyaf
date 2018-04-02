@@ -9,6 +9,7 @@ use extend\weapp\api\MediaGet;
 use extend\weapp\api\MediaUpload;
 use extend\weapp\api\MessageCustomSend;
 use extend\weapp\api\MessageWxOpenTemplateSend;
+use traits\Instance;
 
 /**
  * @property AccessToken $accessToken
@@ -21,6 +22,7 @@ use extend\weapp\api\MessageWxOpenTemplateSend;
  */
 class WeAppProgram
 {
+    use Instance;
     protected $config;
 
     public function __construct($config = null)
@@ -28,7 +30,7 @@ class WeAppProgram
         if ($config == null || is_array($config)) {
             $this->config = new Config($config);
         }
-        if ($config instanceof Config){
+        if ($config instanceof Config) {
             $this->config = $config;
         }
         if (empty($this->config)) {
@@ -37,11 +39,10 @@ class WeAppProgram
         return $this;
     }
 
-
     public function __get($api)
     {
         try {
-            $classname = "\\weapp\\api\\" . ucfirst($api);
+            $classname = "\\extend\\weapp\\api\\" . ucfirst($api);
             if (!class_exists($classname)) {
                 throw new \Exception('api undefined');
                 return false;

@@ -28,6 +28,7 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
      */
     public function _initCache(Yaf_Dispatcher $dispatcher)
     {
-        \think\Cache::init();
+        $cache = \think\Cache::init();
+        Yaf_Registry::set('cache', $cache);
     }
 }

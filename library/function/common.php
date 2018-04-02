@@ -2,31 +2,6 @@
 /**
  * Date: 2018\2\17 0017 23:36
  */
-function dump($var, $echo = true, $label = null, $flags = ENT_SUBSTITUTE)
-{
-    $label = (null === $label) ? '' : rtrim($label) . ':';
-    ob_start();
-    var_dump($var);
-    $output = ob_get_clean();
-    $output = preg_replace('/\]\=\>\n(\s+)/m', '] => ', $output);
-    if (Yaf_Dispatcher::getInstance()->getRequest()->isCli()) {
-        $output = PHP_EOL . $label . $output . PHP_EOL;
-    } else {
-        if (!extension_loaded('xdebug')) {
-            $output = htmlspecialchars($output, $flags);
-        }
-
-        $output = '<pre>' . $label . $output . '</pre>';
-    }
-    $output = '<pre>' . $label . $output . '</pre>';
-    if ($echo) {
-        echo($output);
-        return;
-    } else {
-        return $output;
-    }
-}
-
 /**
  * 字符串截取，支持中文和其他编码
  * @static
@@ -75,4 +50,28 @@ function clean_dir($dir)
     }
     unset($files);
     return $result;
+}
+
+/**
+ * 输出一个人字符串 多少位 长度；
+ **/
+function str_strlen($str)
+{
+    $i = 0;
+    $count = 0;
+    $len = strlen($str);
+    while ($i < $len) {
+        $chr = ord($str[$i]);
+        $count++;
+        $i++;
+        if ($i >= $len) break;
+        if ($chr & 0x80) {
+            $chr <<= 1;
+            while ($chr & 0x80) {
+                $i++;
+                $chr <<= 1;
+            }
+        }
+    }
+    return $count;
 }

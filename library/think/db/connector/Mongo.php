@@ -1412,7 +1412,7 @@ class Mongo
 
         $dsn = [
             'type'     => $info['scheme'],
-            'username' => isset($info['User']) ? $info['User'] : '',
+            'username' => isset($info['user']) ? $info['user'] : '',
             'password' => isset($info['pass']) ? $info['pass'] : '',
             'hostname' => isset($info['host']) ? $info['host'] : '',
             'hostport' => isset($info['port']) ? $info['port'] : '',

@@ -19,7 +19,7 @@ class Config
      */
     public static function get($key = null, $default = null)
     {
-        if (!($config = self::$config)) {
+        if (!($config = &self::$config)) {
             $config = Yaf_Application::app()->getConfig()->toArray();
         }
         //如果为空，返回所有的配置
@@ -57,10 +57,13 @@ class Config
      */
     private static function parse_config($name)
     {
-        $config_file = APP_PATH . '/conf/' . $name . '.ini';
-        if (file_exists($config_file)) {
-            $yaf_config_ini = new \Yaf_Config_Ini($config_file);
-            return $yaf_config_ini->get(APP_ENV)->toArray();
+        if (!isset(self::$config[$name])) {
+            $config_file = APP_PATH . '/conf/' . $name . '.ini';
+            if (file_exists($config_file)) {
+                $yaf_config_ini = new \Yaf_Config_Ini($config_file);
+                self::$config[$name] = $config_arr = $yaf_config_ini->get(APP_ENV)->toArray();
+                return $config_arr;
+            }
         }
         return false;
     }

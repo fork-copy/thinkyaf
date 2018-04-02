@@ -10,7 +10,16 @@ class UserModel extends Model
     public function getUserInfo($uid)
     {
 
-        return $this->where('uid',$uid)->find();
+        return $this->where('uid', $uid)->find();
+    }
+
+    /**
+     * 新增用户s
+     * @param $data
+     */
+    public function add($data)
+    {
+        return $this->save($data);
     }
 
 }

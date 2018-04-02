@@ -5,7 +5,7 @@
  *
  */
 
-class Rest extends Yaf_Controller_Abstract
+class Rest extends Controller
 {
 
     /**
@@ -15,6 +15,11 @@ class Rest extends Yaf_Controller_Abstract
      */
     protected $response = false; //自动返回数据
 
+    /**
+     * 当前请求接受头
+     * @var array
+     */
+    protected $header = [];
     /**
      * 响应状态码
      *
@@ -38,8 +43,8 @@ class Rest extends Yaf_Controller_Abstract
     {
         if ($this->response !== false) {
             $response = $this->_response;
-            $response->setHeader('Content-Type', 'application/json;charset=utf-8',true, $this->code);
-            $response->setBody( json_encode($this->response, $this->_config['json']));
+            $response->setHeader('Content-Type', 'application/json;charset=utf-8', true, $this->code);
+            $response->setBody(json_encode($this->response, $this->_config['json']));
             $response->response();
         }
     }
@@ -117,8 +122,7 @@ class Rest extends Yaf_Controller_Abstract
                     );
                     $info = array_merge($info, $dev_info);
                 }
-                $this->response(10001, $info, 404);
-                exit;
+                $this->response(\bean\ErrorCode::ERROR_ACTION, $info, 404);
             }
         } elseif ($action !== $request->getActionName()) {
             /*修改后的$action存在而$rest_action不存在,绑定参数默认控制器*/
@@ -139,10 +143,11 @@ class Rest extends Yaf_Controller_Abstract
     {
         $this->response = array(
             $this->_config['status'] => $status,
+            $this->_config['msg'] => is_string($data) ? $data : $data['error'],
             $this->_config['data'] => $data,
         );
         ($code > 0) && $this->code = $code;
-        exit;
+        exit();
     }
 
     /**
@@ -153,15 +158,15 @@ class Rest extends Yaf_Controller_Abstract
      * @param mixed $data 返回数据内容
      * @param int $code 设置状态码[默认200]
      */
-    protected function success($data = null, $msg = '操作成功', $code = 200)
+    protected function success($msg = '', $data = null, $code = 200)
     {
         $this->response = array(
             $this->_config['status'] => 1,
-            $this->_config['msg'] => $msg,
+            $this->_config['msg'] => $msg ? $msg : '操作成功',
             $this->_config['data'] => $data,
         );
         $this->code = $code;
-        exit;
+        exit();
     }
 
     /**
@@ -172,15 +177,15 @@ class Rest extends Yaf_Controller_Abstract
      * @param mixed $data 返回数据内容
      * @param int $code 设置状态码[默认200]
      */
-    protected function fail($data = null, $msg = '操作失败', $code = 200)
+    protected function fail($msg = '', $data = null, $code = 200)
     {
         $this->response = array(
             $this->_config['status'] => 0,
-            $this->_config['msg'] => $msg,
+            $this->_config['msg'] => $msg ? $msg : '操作失败',
             $this->_config['data'] => $data,
         );
         $this->code = $code;
-        exit;
+        exit();
     }
 
     /**
@@ -218,5 +223,45 @@ class Rest extends Yaf_Controller_Abstract
                 header($key . ': ' . $value);
             }
         }
+    }
+
+    /**
+     * 设置或者获取当前的Header
+     * @access public
+     * @param string|array $name header名称
+     * @param string $default 默认值
+     * @return string
+     */
+    public function header($name = '', $default = null)
+    {
+        if (empty($this->header)) {
+            $header = [];
+            if (function_exists('apache_request_headers') && $result = apache_request_headers()) {
+                $header = $result;
+            } else {
+                $server = $_SERVER;
+                foreach ($server as $key => $val) {
+                    if (0 === strpos($key, 'HTTP_')) {
+                        $key = str_replace('_', '-', strtolower(substr($key, 5)));
+                        $header[$key] = $val;
+                    }
+                }
+                if (isset($server['CONTENT_TYPE'])) {
+                    $header['content-type'] = $server['CONTENT_TYPE'];
+                }
+                if (isset($server['CONTENT_LENGTH'])) {
+                    $header['content-length'] = $server['CONTENT_LENGTH'];
+                }
+            }
+            $this->header = array_change_key_case($header);
+        }
+        if (is_array($name)) {
+            return $this->header = array_merge($this->header, $name);
+        }
+        if ('' === $name) {
+            return $this->header;
+        }
+        $name = str_replace('_', '-', strtolower($name));
+        return isset($this->header[$name]) ? $this->header[$name] : $default;
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-use SplFileObject;
 use think\validate\ValidateRule;
 
 class Validate

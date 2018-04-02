@@ -79,7 +79,7 @@ class Db
 
     public static function setConfig($config = [])
     {
-        if (empty($config)) {
+        if (empty($config) && empty(self::$config)) {
             $config = \Config::get('db.db');
         }
         self::$config = array_merge(self::$config, $config);

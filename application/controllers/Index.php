@@ -15,24 +15,35 @@ class IndexController extends Rest
      */
     public function GET_indexAction()
     {
-
-
+        //这是一个用户查询例子
+        $uid = input('uid');
+        //简单的模型调用
+        $user_model = new UserModel();
+        $userInfo = $user_model->getUserInfo($uid);
     }
 
     /**
-     * POST /Index/test
+     * POST /Index/addUser
      * POST请求测试
      *
      * response()函数自定义状态
      */
-    public function POST_testAction()
+    public function POST_addUserAction()
     {
-        if (Input::post('data', $data)) {
-            // response() 指定状态为1 等同于success
-            $this->response(1, $data);
-        } else {
-            //错误码为0，并指定http 状态码为400
-            $this->response(0, 'please POST data with field name "data"', 400);
+        $where['username'] = input('username');
+        $where['password'] = input('password');
+        //数据验证
+        $video_validate = new \validate\User();
+        //采用场景验证
+        if (!$video_validate->scene('add')->check($where)) {
+            $this->fail($video_validate->getError());
         }
+        //简单的模型调用
+        $user_model = new UserModel();
+        if ($user_model->add($where)) {
+            $this->success();
+        }
+        $this->fail();
+
     }
 }

@@ -302,3 +302,8 @@ Session::clear();
 // 清除think作用域
 Session::clear('think');
 ```
+
+更多请见
+
+
+看云文档地址：https://www.kancloud.cn/yumufeng/thinkyaf
