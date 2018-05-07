@@ -21,7 +21,7 @@ class Config
     public function __construct($config = null)
     {
 
-        if ($config == null) {
+        if (empty($config)) {
             $config = \Config::get('weapp');
         }
         if (isset($config['appid'])) {

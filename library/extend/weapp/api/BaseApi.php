@@ -114,6 +114,64 @@ class BaseApi
         return $this->buildResponse($curl);
     }
 
+    /**
+     * 构建请求
+     * @param $url
+     * @param array $params
+     * @param int $expire
+     * @param array $extend
+     * @return array
+     */
+    protected function makeRequest($url, $params = array(), $expire = 0, $extend = array())
+    {
+        if (empty($url)) {
+            return array('code' => '100');
+        }
+
+        $_curl = curl_init();
+        $_header = array(
+            'Accept-Language: zh-CN',
+            'Connection: Keep-Alive',
+            'Cache-Control: no-cache'
+        );
+
+        // 只要第二个参数传了值之后，就是POST的
+        if (!empty($params)) {
+            curl_setopt($_curl, CURLOPT_POSTFIELDS, http_build_query($params));
+            curl_setopt($_curl, CURLOPT_POST, true);
+        }
+
+        if (substr($url, 0, 8) == 'https://') {
+            curl_setopt($_curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($_curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        }
+        curl_setopt($_curl, CURLOPT_URL, $url);
+        curl_setopt($_curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($_curl, CURLOPT_USERAGENT, 'API PHP CURL');
+        curl_setopt($_curl, CURLOPT_HTTPHEADER, $_header);
+
+        if ($expire > 0) {
+            curl_setopt($_curl, CURLOPT_TIMEOUT, $expire); // 处理超时时间
+            curl_setopt($_curl, CURLOPT_CONNECTTIMEOUT, $expire); // 建立连接超时时间
+        }
+
+        // 额外的配置
+        if (!empty($extend)) {
+            curl_setopt_array($_curl, $extend);
+        }
+
+        $result['result'] = curl_exec($_curl);
+        $result['code'] = curl_getinfo($_curl, CURLINFO_HTTP_CODE);
+        $result['info'] = curl_getinfo($_curl);
+        if ($result['result'] === false) {
+            $result['result'] = curl_error($_curl);
+            $result['code'] = -curl_errno($_curl);
+        }
+
+        curl_close($_curl);
+        return $result;
+    }
+
     protected function buildResponse($curl)
     {
         if (static::CURL_RAW == true) {

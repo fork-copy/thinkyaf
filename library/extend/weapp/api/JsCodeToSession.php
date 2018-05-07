@@ -30,7 +30,9 @@ class JsCodeToSession extends BaseApi
             'js_code' => $this->jsCode,
             'grant_type' => $this->grantType,
         ];
-        return $this->post($params);
+        $result = $this->makeRequest(self::API, $params);
+        return $result;
+
     }
 
 

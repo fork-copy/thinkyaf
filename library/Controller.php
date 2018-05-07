@@ -7,10 +7,13 @@
  */
 class Controller extends \Yaf_Controller_Abstract
 {
+    /**
+     * @var Request Request 实例
+     */
+    protected $request;
 
     protected function init()
     {
-
+        $this->request = Request::instance();
     }
-    //待完善
 }
