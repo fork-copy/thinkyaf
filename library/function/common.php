@@ -95,7 +95,7 @@ function logs($content, $filename = '', $sdir = '', $Separator = ",")
     }
     if (!empty($sdir)) {
         $dir = $dir . '/' . $sdir;
-        if (!is_dir()) {
+        if (!is_dir($dir)) {
             @mkdir($dir, 0777);
         }
     }
