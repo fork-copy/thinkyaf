@@ -75,3 +75,33 @@ function str_strlen($str)
     }
     return $count;
 }
+
+
+/**
+ * 记录日志
+ * @param $content
+ * @param string $filename
+ * @param string $Separator
+ * @return bool|int
+ */
+function logs($content, $filename = '', $sdir = '', $Separator = ",")
+{
+    if (is_array($content)) {
+        $content = var_export($content,true);
+    }
+    $dir = Config::get('log_path');
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0777);
+    }
+    if (!empty($sdir)) {
+        $dir = $dir . '/' . $sdir;
+        if (!is_dir()) {
+            @mkdir($dir, 0777);
+        }
+    }
+    if (empty($filename)) {
+        $filename = date('Y_m_d', time());
+    }
+    $result = file_put_contents($dir . '/' . $filename . '.log', (date('Y-m-d h:i:s', time())) . ' ： ' . $content . "\r\n", FILE_APPEND | LOCK_EX);
+    return $result;
+}
